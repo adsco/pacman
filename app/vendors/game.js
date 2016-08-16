@@ -27,7 +27,8 @@ export default class Game {
         
         this.lastUpdateTime = this.time;
         
-        _gameLoop.call(window, this._tickFn);
+        this._setGameLoop(this._tickFn);
+        //_gameLoop.call(window, this._tickFn);
     }
 
     /**
@@ -60,6 +61,10 @@ export default class Game {
         return this._lastUpdateTime;
     }
     
+    _setGameLoop(callback) {
+        _gameLoop.call(window, callback);
+    }
+    
     /**
      * Game loop tick
      */
@@ -79,7 +84,8 @@ export default class Game {
             this._render();
         }
 
-        _gameLoop.call(window, this._tickFn);
+        this._setGameLoop(this._tickFn);
+        //_gameLoop.call(window, this._tickFn);
     }
 
     /**
