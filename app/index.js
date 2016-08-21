@@ -1,7 +1,8 @@
-import Game from './vendors/game';
+import PacmanGame from './game';
 
 window.onload = function() {
-    var game = new Game();
+    var canvas = document.getElementById('game-viewport');
+    var game = new PacmanGame(canvas.getContext('2d'), canvas.width, canvas.height);
     
     game.fps = 1;
     game.run();

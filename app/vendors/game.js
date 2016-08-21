@@ -11,12 +11,18 @@ export default class Game {
     /**
      * Constructor
      */
-    constructor() {
+    constructor(context2D, width, height) {
         var me = this;
         
         me._tickFn = function() {
             me._tick();
         };
+
+        this._width = width || 0;
+        this._height = height || 0;
+        this._updateList = [];
+        this._renderList = [];
+        this._context2D = context2D;
     }
     
     /**
@@ -28,7 +34,6 @@ export default class Game {
         this.lastUpdateTime = this.time;
         
         this._setGameLoop(this._tickFn);
-        //_gameLoop.call(window, this._tickFn);
     }
 
     /**
@@ -85,13 +90,16 @@ export default class Game {
         }
 
         this._setGameLoop(this._tickFn);
-        //_gameLoop.call(window, this._tickFn);
     }
 
     /**
      * Game update function
      */
     _update() {
+        for (let i = 0, len = this._updateList.length; i < len; i++) {
+            this._updateList[i].update();
+        }
+
         console.log('Update');
     }
 
@@ -99,6 +107,10 @@ export default class Game {
      * Game render function
      */
     _render() {
-        console.log('Render');
+        for (let i = 0, len = this._renderList.length; i < len; i++) {
+            this._renderList[i].render(this._context2D);
+        }
+
+        console.log('Render', this._renderList);
     }
 }
