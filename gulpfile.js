@@ -6,6 +6,7 @@ var minify = require('gulp-minify');
 var gulpSync = require('gulp-sync')(gulp);
 var babelify = require('babelify');
 var browserify = require('browserify');
+var watch = require('gulp-watch');
 
 gulp.task('default', gulpSync.sync(['cleanup', 'babelify', 'transpile', 'minify', 'copy']));
 
@@ -43,4 +44,8 @@ gulp.task('babelify', function() {
         .transform(babelify)
         .bundle()
         .pipe(fs.createWriteStream('./dist/app.js'));
+});
+
+gulp.task('live-reload', function() {
+    gulp.watch('./app/*', ['default']);
 });
