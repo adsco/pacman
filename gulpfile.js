@@ -8,7 +8,7 @@ var babelify = require('babelify');
 var browserify = require('browserify');
 var watch = require('gulp-watch');
 
-gulp.task('default', gulpSync.sync(['cleanup', 'babelify', 'transpile', 'minify', 'copy']));
+gulp.task('default', gulpSync.sync(['cleanup', 'babelify', 'transpile', 'minify', 'copy', 'move-resources']));
 
 gulp.task('cleanup', function() {
 	return del([
@@ -17,10 +17,13 @@ gulp.task('cleanup', function() {
 	]);
 });
 
-gulp.task('transpile', function() {
-	return gulp.src('./app/**/*.js')
-		.pipe(babel())
-		.pipe(gulp.dest('./lib/'));
+gulp.task('transpile', function(done) {
+    return gulp.src('./app/**/*.js')
+        .pipe(babel())
+        .on('error', function(error) {
+            this.emit('end');
+        })
+        .pipe(gulp.dest('./lib/'));
 });
 
 gulp.task('minify', function() {
@@ -39,6 +42,11 @@ gulp.task('copy', function() {
         .pipe(gulp.dest('./dist/'));
 });
 
+gulp.task('move-resources', function() {
+    return gulp.src(['./app/resources/**/*'])
+        .pipe(gulp.dest('./dist/resources'));
+});
+
 gulp.task('babelify', function() {
     return browserify('./app/index.js')
         .transform(babelify)
@@ -47,5 +55,5 @@ gulp.task('babelify', function() {
 });
 
 gulp.task('live-reload', function() {
-    gulp.watch('./app/*', ['default']);
+    return gulp.watch('./app/**/*', ['default']);
 });
