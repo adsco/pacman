@@ -38,6 +38,10 @@ export default (superclass) => class extends superclass {
     getFrame(gameTime) {
         var frame;
         
+        if (!this._currentAnimation) {
+            throw new Error('Animation to play is not set');
+        }
+        
         if (this._currentFrameIndex === -1) {
             this._currentFrameIndex = 0;
             this._timeElapsed = gameTime;
