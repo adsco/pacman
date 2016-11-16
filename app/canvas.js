@@ -26,18 +26,22 @@ export default class Canvas {
         return this._context;
     }
     
-    set width(width) {
+    setWidth(width) {
         if (this.canvas) {
             this.canvas.width = width;
             this.canvas.style.width = width + 'px';
         }
+        
+        this.width = width;
     }
     
-    set height(height) {
+    setHeight(height) {
         if (this.canvas) {
             this.canvas.height = height;
             this.canvas.style.height = height + 'px';
         }
+        
+        this.height = height;
     }
     
     setFillStyle(style) {
