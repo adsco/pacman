@@ -3,8 +3,11 @@ import Canvas from './canvas';
 import ResourceLoader from './resourceLoader';
 import BackgroundLayer from './layers/background';
 import ActorLayer from './layers/actor';
+import MiscLayer from './layers/misc';
+import TextLayer from './layers/text';
 import Frame from './frame';
 import FrameSet from './frame-set';
+import FrameBuilder from './frame-builder';
 
 window.onload = function() {
     var canvas = new Canvas(document.getElementById('game-viewport'));
@@ -35,6 +38,34 @@ window.onload = function() {
             var inkyEyesBottom = createInkyAnimation(resource.resource);
             var inkyEyesLeft = createInkyAnimation(resource.resource);
             var inkyEyesRight = createInkyAnimation(resource.resource);
+            var ready = createReadyAnimation(resource.resource);
+            var text = createTextLayer(resource.resource);
+            var up1 = create1UPAnimation(resource.resource);
+            var up2 = create2UPAnimation(resource.resource);
+            var gameOver = createGameOverAnimation(resource.resource);
+            var bigPie = createBigPieAnimation(resource.resource);
+            var smallPie = createSmallPieAnimation(resource.resource);
+            var life = createLifeAnimation(resource.resource);
+            var bonusCherry = createBonusCherryAnimation(resource.resource);
+            var bonusBerry = createBonusStrawberryAnimation(resource.resource);
+            var bonusPlum = createBonusPlumAnimation(resource.resource);
+            var bonusApple = createBonusAppleAnimation(resource.resource);
+            var bonusFrunze = createBonusFrunzeAnimation(resource.resource);
+            var bonusGalaxian = createBonusGalaxianAnimation(resource.resource);
+            var bonusBell = createBonusBellAnimation(resource.resource);
+            var bonusKey = createBonusKeyAnimation(resource.resource);
+            var score200 = createScore200Animation(resource.resource);
+            var score400 = createScore400Animation(resource.resource);
+            var score800 = createScore800Animation(resource.resource);
+            var score1600 = createScore1600Animation(resource.resource);
+            var score100 = createScore100Animation(resource.resource);
+            var score300 = createScore300Animation(resource.resource);
+            var score500 = createScore500Animation(resource.resource);
+            var score700 = createScore700Animation(resource.resource);
+            var score1000 = createScore1000Animation(resource.resource);
+            var score2000 = createScore2000Animation(resource.resource);
+            var score3000 = createScore3000Animation(resource.resource);
+            var score5000 = createScore5000Animation(resource.resource);
             var animatronics = [
                 pacmanIdle,
                 pacmanMoveLeft,
@@ -51,14 +82,41 @@ window.onload = function() {
                 inkyEyesTop,
                 inkyEyesBottom,
                 inkyEyesLeft,
-                inkyEyesRight
+                inkyEyesRight,
+                bigPie,
+                smallPie,
+                life,
+                bonusCherry,
+                bonusBerry,
+                bonusPlum,
+                bonusApple,
+                bonusFrunze,
+                bonusGalaxian,
+                bonusBell,
+                bonusKey,
+                score200,
+                score400,
+                score800,
+                score1600,
+                score100,
+                score300,
+                score500,
+                score700,
+                score1000,
+                score2000,
+                score3000,
+                score5000
             ];
             var update = function() {
                 var time = window.performance.now();
+                var context = canvas.getContext();
                 var frame;
+                var frames;
+                var y = 0;
+                var left = 0;
 
                 canvas.clear();
-                canvas.getContext().fillRect(0, 0, width, height);
+                context.fillRect(0, 0, width, height);
                 
                 // Draw grid
 //                for (let i = 0, len = width / 8; i < len; i++) {
@@ -88,18 +146,81 @@ window.onload = function() {
                 for (let i = 0, len = animatronics.length; i < len; i++) {
                     frame = animatronics[i].getFrame(time);
 
-                    canvas.getContext().drawImage(
+                    context.drawImage(
                         frame.image,
                         frame.x,
                         frame.y,
                         frame.width,
                         frame.height,
-                        i * 16 + frame.shiftX,
-                        2 + frame.shiftY,
+                        left * 25 + frame.shiftX,
+                        y * 16 + frame.shiftY,
                         frame.width,
                         frame.height
                     );
+            
+                    left++;
+                    
+                    if (i > 0 && i % 18 === 0) {
+                        y++;
+                        left = 0;
+                    }
                 }
+                
+                frame = ready.getFrame(time);
+                context.drawImage(frame.image, frame.x, frame.y, frame.width, frame.height, 100, 200, frame.width, frame.height);
+
+                frames = text.getFrames(time);
+                
+                for (let i = 0, len = frames.length; i < len; i++) {
+                    context.drawImage(
+                        frames[i].image,
+                        frames[i].x,
+                        frames[i].y,
+                        frames[i].width,
+                        frames[i].height,
+                        100 + frames[i].shiftX,
+                        100 + frames[i].shiftY,
+                        frames[i].width,
+                        frames[i].height);
+                }
+                
+                frame = up1.getFrame(time);
+                context.drawImage(
+                    frame.image,
+                    frame.x,
+                    frame.y,
+                    frame.width,
+                    frame.height,
+                    50,
+                    50,
+                    frame.width,
+                    frame.height
+                );
+        
+                frame = up2.getFrame(time);
+                context.drawImage(
+                    frame.image,
+                    frame.x,
+                    frame.y,
+                    frame.width,
+                    frame.height,
+                    50,
+                    70,
+                    frame.width,
+                    frame.height
+                );
+                frame = gameOver.getFrame(time);
+                context.drawImage(
+                    frame.image,
+                    frame.x,
+                    frame.y,
+                    frame.width,
+                    frame.height,
+                    50,
+                    90,
+                    frame.width,
+                    frame.height
+                );
 
                 window.requestAnimationFrame(update);
             };
@@ -121,7 +242,36 @@ window.onload = function() {
             inkyEyesBottom.startAnimation('eyesMoveBottom');
             inkyEyesLeft.startAnimation('eyesMoveLeft');
             inkyEyesRight.startAnimation('eyesMoveRight');
-            
+            ready.startAnimation('ready');
+            up1.startAnimation('1up');
+            up2.startAnimation('2up');
+            gameOver.startAnimation('gameOver');
+            bigPie.startAnimation('bigPie');
+            smallPie.startAnimation('smallPie');
+            life.startAnimation('life');
+            bonusCherry.startAnimation('cherry');
+            bonusBerry.startAnimation('strawberry');
+            bonusPlum.startAnimation('plum');
+            bonusApple.startAnimation('apple');
+            bonusFrunze.startAnimation('frunze');
+            bonusGalaxian.startAnimation('galaxian');
+            bonusBell.startAnimation('bell');
+            bonusKey.startAnimation('key');
+            score200.startAnimation('score200');
+            score400.startAnimation('score400');
+            score800.startAnimation('score800');
+            score1600.startAnimation('score1600');
+            score100.startAnimation('score100');
+            score300.startAnimation('score300');
+            score500.startAnimation('score500');
+            score700.startAnimation('score700');
+            score1000.startAnimation('score1000');
+            score2000.startAnimation('score2000');
+            score3000.startAnimation('score3000');
+            score5000.startAnimation('score5000');
+
+            text.showText('012345678901234567890123456789');
+
             update();
         }
     );
@@ -230,8 +380,7 @@ function createBlinkyAnimation(image) {
         new Frame(2, 162, 15, 15, 150),
         new Frame(42, 162, 15, 15, 150),
         new Frame(22, 162, 15, 15, 150),
-        new Frame(62, 162, 15, 15, 150),
-        new Frame(2, 162, 15, 15, 150)
+        new Frame(62, 162, 15, 15, 150)
     ]);
     frameSetEyesMoveTop.addFrames([
         new Frame(4, 203, 11, 6, 0)
@@ -318,8 +467,7 @@ function createPinkyAnimation(image) {
         new Frame(2, 162, 15, 15, 150),
         new Frame(42, 162, 15, 15, 150),
         new Frame(22, 162, 15, 15, 150),
-        new Frame(62, 162, 15, 15, 150),
-        new Frame(2, 162, 15, 15, 150)
+        new Frame(62, 162, 15, 15, 150)
     ]);
     frameSetEyesMoveTop.addFrames([
         new Frame(4, 203, 11, 6, 0)
@@ -406,8 +554,7 @@ function createInkyAnimation(image) {
         new Frame(2, 162, 15, 15, 150),
         new Frame(42, 162, 15, 15, 150),
         new Frame(22, 162, 15, 15, 150),
-        new Frame(62, 162, 15, 15, 150),
-        new Frame(2, 162, 15, 15, 150)
+        new Frame(62, 162, 15, 15, 150)
     ]);
     frameSetEyesMoveTop.addFrames([
         new Frame(4, 203, 11, 6, 0)
@@ -494,8 +641,7 @@ function createClydeAnimation(image) {
         new Frame(2, 162, 15, 15, 150),
         new Frame(42, 162, 15, 15, 150),
         new Frame(22, 162, 15, 15, 150),
-        new Frame(62, 162, 15, 15, 150),
-        new Frame(2, 162, 15, 15, 150)
+        new Frame(62, 162, 15, 15, 150)
     ]);
     frameSetEyesMoveTop.addFrames([
         new Frame(4, 203, 11, 6, 0)
@@ -543,4 +689,369 @@ function createClydeAnimation(image) {
     }]);
     
     return clyde;
+}
+
+function createReadyAnimation(image) {
+    var ready = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrame(new Frame(202, 1, 47, 8, 0));
+    
+    ready.addAnimation('ready', frameSet);
+    
+    return ready;
+}
+
+function createTextLayer(image) {
+    var text = new TextLayer();
+    var frameBuilder = new FrameBuilder(image);
+    
+    text.setFrameBuilder(frameBuilder);
+    text.setTextMap({
+        0: {x: 12, y: 181, width: 8, height: 8},
+        1: {x: 22, y: 181, width: 8, height: 8},
+        2: {x: 32, y: 181, width: 8, height: 8},
+        3: {x: 42, y: 181, width: 8, height: 8},
+        4: {x: 52, y: 181, width: 8, height: 8},
+        5: {x: 62, y: 181, width: 8, height: 8},
+        6: {x: 72, y: 181, width: 8, height: 8},
+        7: {x: 82, y: 181, width: 8, height: 8},
+        8: {x: 92, y: 181, width: 8, height: 8},
+        9: {x: 102, y: 181, width: 8, height: 8}
+    });
+    
+    return text;
+}
+
+function create1UPAnimation(image) {
+    var up1 = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrame(new Frame(215, 71, 23, 8, 0));
+    
+    up1.addAnimation('1up', frameSet);
+    
+    return up1;
+}
+
+function create2UPAnimation(image) {
+    var up2 = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrame(new Frame(214, 81, 24, 8, 0));
+    
+    up2.addAnimation('2up', frameSet);
+    
+    return up2;
+}
+
+function createGameOverAnimation(image) {
+    var gameOver = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrame(new Frame(12, 191, 80, 8, 0));
+    
+    gameOver.addAnimation('gameOver', frameSet);
+    
+    return gameOver;
+}
+
+function createBigPieAnimation(image) {
+    var bigPie = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(1, 181, 9, 9, 150),
+        new Frame(0, 0, 0, 0, 150)
+    ]);
+    
+    bigPie.addAnimation('bigPie', frameSet);
+    
+    return bigPie;
+}
+
+function createSmallPieAnimation(image) {
+    var smallPie = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(3, 183, 3, 3, 0)
+    ]);
+    
+    smallPie.addAnimation('smallPie', frameSet);
+    
+    return smallPie;
+}
+
+function createLifeAnimation(image) {
+    var life = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(84, 163, 11, 12, 0)
+    ]);
+    
+    life.addAnimation('life', frameSet);
+    
+    return life;
+}
+
+function createBonusCherryAnimation(image) {
+    var cherry = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(171, 163, 13, 13, 0)
+    ]);
+    
+    cherry.addAnimation('cherry', frameSet);
+    
+    return cherry;
+}
+
+function createBonusStrawberryAnimation(image) {
+    var strawberry = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(172, 183, 12, 13, 0)
+    ]);
+    
+    strawberry.addAnimation('strawberry', frameSet);
+    
+    return strawberry;
+}
+
+function createBonusPlumAnimation(image) {
+    var plum = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(172, 203, 12, 13, 0)
+    ]);
+    
+    plum.addAnimation('plum', frameSet);
+    
+    return plum;
+}
+
+function createBonusAppleAnimation(image) {
+    var apple = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(171, 223, 13, 13, 0)
+    ]);
+    
+    apple.addAnimation('apple', frameSet);
+    
+    return apple;
+}
+
+function createBonusFrunzeAnimation(image) {
+    var frunze = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(212, 162, 12, 15, 0)
+    ]);
+    
+    frunze.addAnimation('frunze', frameSet);
+    
+    return frunze;
+}
+
+function createBonusGalaxianAnimation(image) {
+    var galaxian = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(212, 184, 12, 12, 0)
+    ]);
+    
+    galaxian.addAnimation('galaxian', frameSet);
+    
+    return galaxian;
+}
+
+function createBonusBellAnimation(image) {
+    var bell = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(211, 202, 13, 14, 0)
+    ]);
+    
+    bell.addAnimation('bell', frameSet);
+    
+    return bell;
+}
+
+function createBonusKeyAnimation(image) {
+    var key = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(214, 223, 8, 14, 0)
+    ]);
+    
+    key.addAnimation('key', frameSet);
+    
+    return key;
+}
+
+function createScore200Animation(image) {
+    var score200 = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(2, 225, 16, 8, 0)
+    ]);
+    
+    score200.addAnimation('score200', frameSet);
+    
+    return score200;
+}
+
+function createScore400Animation(image) {
+    var score400 = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(22, 225, 16, 8, 0)
+    ]);
+    
+    score400.addAnimation('score400', frameSet);
+    
+    return score400;
+}
+
+function createScore800Animation(image) {
+    var score800 = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(42, 225, 16, 8, 0)
+    ]);
+    
+    score800.addAnimation('score800', frameSet);
+    
+    return score800;
+}
+
+function createScore1600Animation(image) {
+    var score1600 = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(61, 225, 17, 8, 0)
+    ]);
+    
+    score1600.addAnimation('score1600', frameSet);
+    
+    return score1600;
+}
+
+function createScore100Animation(image) {
+    var score100 = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(171, 5, 14, 8, 0)
+    ]);
+    
+    score100.addAnimation('score100', frameSet);
+    
+    return score100;
+}
+
+function createScore300Animation(image) {
+    var score300 = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(169, 25, 16, 8, 0)
+    ]);
+    
+    score300.addAnimation('score300', frameSet);
+    
+    return score300;
+}
+
+function createScore500Animation(image) {
+    var score500 = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(169, 45, 16, 8, 0)
+    ]);
+    
+    score500.addAnimation('score500', frameSet);
+    
+    return score500;
+}
+
+function createScore700Animation(image) {
+    var score700 = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(169, 65, 16, 8, 0)
+    ]);
+    
+    score700.addAnimation('score700', frameSet);
+    
+    return score700;
+}
+
+function createScore1000Animation(image) {
+    var score1000 = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(169, 85, 19, 8, 0)
+    ]);
+    
+    score1000.addAnimation('score1000', frameSet);
+    
+    return score1000;
+}
+
+function createScore2000Animation(image) {
+    var score2000 = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(167, 105, 21, 8, 0)
+    ]);
+    
+    score2000.addAnimation('score2000', frameSet);
+    
+    return score2000;
+}
+
+function createScore3000Animation(image) {
+    var score3000 = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(167, 125, 21, 8, 0)
+    ]);
+    
+    score3000.addAnimation('score3000', frameSet);
+    
+    return score3000;
+}
+
+function createScore5000Animation(image) {
+    var score5000 = new MiscLayer();
+    var frameSet = new FrameSet(image);
+    
+    frameSet.addFrames([
+        new Frame(167, 145, 21, 8, 0)
+    ]);
+    
+    score5000.addAnimation('score5000', frameSet);
+    
+    return score5000;
 }

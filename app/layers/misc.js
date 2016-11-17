@@ -1,7 +1,7 @@
 import BaseLayout from './base';
 import AnimationMixin from './../mixins/animation';
 
-export default class BackgroundLayer extends AnimationMixin(BaseLayout) {
+export default class MiscLayer extends AnimationMixin(BaseLayout) {
     constructor() {
         super();
         

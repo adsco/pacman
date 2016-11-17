@@ -11,12 +11,4 @@ export default class ActorLayer extends AnimationMixin(BaseLayout) {
         this._currentFrameIndex = 0;
         this._animationPaused = false;
     }
-    
-    render(context) {
-        if (!this.image) {
-            return;
-        }
-
-        context.drawImage(this.image, this.x, this.y, this.width, this.height);
-    }
 }

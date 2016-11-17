@@ -10,8 +10,4 @@ export default class BaseLayer {
     constructor() {
         this._setupProperties();
     }
-    
-    render(context) {
-        
-    }
 }
