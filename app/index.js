@@ -8,12 +8,17 @@ import TextLayer from './layers/text';
 import Frame from './frame';
 import FrameSet from './frame-set';
 import FrameBuilder from './frame-builder';
+import GameKeys from './io/game-keys';
+import IO from './io';
 
 window.onload = function() {
     var canvas = new Canvas(document.getElementById('game-viewport'));
     var resourceLoader = new ResourceLoader();
     var width = 500;
     var height = 600;
+    var io = new IO(GameKeys);
+    
+    document.addEventListener('keydown', function(event) {console.log(io.getKey(event))});
 
     canvas.setWidth(width);
     canvas.setHeight(height);

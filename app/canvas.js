@@ -48,6 +48,10 @@ export default class Canvas {
         this._context.fillStyle = style;
     }
     
+    on(eventName, callback) {
+        this.canvas.addEventListener(eventName, callback);
+    }
+    
     drawRect(color, x, y, width, height) {
         this.clear();
         
