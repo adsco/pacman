@@ -1,15 +1,16 @@
-import PacmanGame from './game';
-import Canvas from './canvas';
-import ResourceLoader from './resourceLoader';
+import Canvas from './canvas/canvas';
+import ResourceLoader from './loaders/resource-loader';
 import BackgroundLayer from './layers/background';
 import ActorLayer from './layers/actor';
 import MiscLayer from './layers/misc';
 import TextLayer from './layers/text';
-import Frame from './frame';
-import FrameSet from './frame-set';
-import FrameBuilder from './frame-builder';
+import Frame from './animation/frame';
+import FrameSet from './animation/frame-set';
+import FrameBuilder from './animation/frame-builder';
 import GameKeys from './io/game-keys';
-import IO from './io';
+import IO from './io/io';
+import SceneManager from './scenes/scene-manager';
+import MenuScene from './scenes/menu';
 
 window.onload = function() {
     var canvas = new Canvas(document.getElementById('game-viewport'));
@@ -17,6 +18,16 @@ window.onload = function() {
     var width = 500;
     var height = 600;
     var io = new IO(GameKeys);
+    var sceneManager = new SceneManager();
+    var scene;
+    
+    sceneManager.addScene('menu', new MenuScene(canvas));
+
+    scene = sceneManager.playScene('menu');
+    
+    sceneManager.play();
+    
+    return;
     
     document.addEventListener('keydown', function(event) {console.log(io.getKey(event))});
 

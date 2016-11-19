@@ -13,10 +13,14 @@ export default class Scene {
         * @property {Function} _onDestroy - callback to be invoked on scene destruction
         */
        this._onDestroy = null;
+       
+       this._canvas = null;
     }
     
-    constructor() {
+    constructor(canvas) {
         this._setupProperties();
+        
+        this._canvas = canvas;
     }
     
     /**
@@ -26,11 +30,11 @@ export default class Scene {
         // Do initial preparations here
     }
     
-    update() {
+    update(time) {
         
     }
     
-    render() {
+    render(time) {
         
     }
     
@@ -38,22 +42,8 @@ export default class Scene {
         
     }
     
-    onKeyDown() {
+    onKeyDown(key) {
         
-    }
-    
-    /**
-     * Just pause scene, used internally
-     */
-    pause() {
-        this._paused = true;
-    }
-    
-    /**
-     * Unpause scene, used internally
-     */
-    unpause() {
-        this._paused = false;
     }
     
     /**
