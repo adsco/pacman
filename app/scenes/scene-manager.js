@@ -31,14 +31,18 @@ export default class SceneManager {
         return this._scenes.hasOwnProperty(id) ? this._scenes[id] : null;
     }
     
-    playScene(id) {
-        var scene = this.getScene(id);
-        
+    playScene(scene) {
         if (!scene) {
-            throw new Error(`Scene ${id} is not found`);
+            throw new Error(`Scene required`);
+        }
+        
+        if (this._activeScene) {
+            this._activeScene.stop();
         }
         
         this._activeScene = scene;
+
+        this.play();
 
         this._getUpdateFn()();
     }

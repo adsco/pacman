@@ -46,10 +46,21 @@ export default class Scene {
         
     }
     
+    onStop() {
+        
+    }
+    
+    onDestroy() {
+        
+    }
+    
     /**
      * Scene exit point, used by scene manager, to force scene end and future clean up
      */
     stop() {
+        if (typeof this.onStop === 'function') {
+            this.onStop();
+        };
         // Do clean up here
     }
     
@@ -57,10 +68,8 @@ export default class Scene {
      * Same as stop but, this one will invoke onDestroy callback after calling stop
      */
     destroy() {
-        this.stop();
-        
-        if (typeof this._onDestroy === 'function') {
-            this._onDestroy(this);
+        if (typeof this.onDestroy === 'function') {
+            this.onDestroy(this);
         }
     }
 }

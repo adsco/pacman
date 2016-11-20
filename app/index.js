@@ -11,6 +11,8 @@ import GameKeys from './io/game-keys';
 import IO from './io/io';
 import SceneManager from './scenes/scene-manager';
 import MenuScene from './scenes/menu';
+import GameScene from './scenes/game';
+import MenuItem from './scenes/menu-item';
 
 window.onload = function() {
     var canvas = new Canvas(document.getElementById('game-viewport'));
@@ -19,20 +21,44 @@ window.onload = function() {
     var height = 600;
     var io = new IO(GameKeys);
     var sceneManager = new SceneManager();
-    var scene;
-    
-    sceneManager.addScene('menu', new MenuScene(canvas));
+    var sceneMenu = new MenuScene(canvas);
+    var sceneGame = new GameScene(canvas);
+    var menuItem = new MenuItem('Menu item 1', function() {
+        console.log('clicked');
+    });
 
-    scene = sceneManager.playScene('menu');
+    sceneManager.playScene(sceneMenu);
     
-    sceneManager.play();
+    sceneMenu.onStop = function() {
+        console.log('Scene menu stopped');
+    }
     
-    return;
+    sceneGame.onStop = function() {
+        console.log('Scene game stopped');
+    }
     
+    canvas.canvas.addEventListener('click', function(event) {
+        sceneMenu.onMouseClick(event.offsetX, event.offsetY);
+    });
     document.addEventListener('keydown', function(event) {console.log(io.getKey(event))});
 
     canvas.setWidth(width);
     canvas.setHeight(height);
+    
+    sceneMenu.addItem(menuItem);
+    
+    var update = function() {
+        var time = window.performance.now();
+
+        sceneMenu.update(time);
+        sceneMenu.render(time);
+
+        window.requestAnimationFrame(update);
+    };
+    
+    update();
+    
+    return;
 
     resourceLoader
         .loadResource('background', 'image', 'resources/images/pacman-google.png')
