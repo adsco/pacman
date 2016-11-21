@@ -1,4 +1,5 @@
 import Scene from './scene';
+import {getTextSize} from './../vendors/utils';
 
 /**
  * Base menu class, menu takes control of a game, same as scene, should inherit from scene
@@ -16,17 +17,17 @@ export default class Menu extends Scene {
     addItem(item) {
         var context = this._canvas.getContext();
         var len = this._items.length;
-        var width = context.measureText(item.getText()).width;
+        var size = getTextSize(item.getText(), `${this._fontSize}px`, this._fontFamily);
 
         this._items.push({
             item,
             x: 100,
             // Since base line is text bottom
             y: len * 25 + 200,
-            width,
-            height: this._fontSize,
-            endX: 100 + width,
-            endY: len * 25 + 200 - this._fontSize
+            width: size.width,
+            height: size.height,
+            endX: 100 + size.width,
+            endY: len * 25 + 200 - size.height
         });
     }
     
@@ -39,7 +40,7 @@ export default class Menu extends Scene {
             if (this._items[i].x <= x && this._items[i].endX >= x && 
                 this._items[i].endY <= y && this._items[i].y >= y) {
                 this._items[i].item.click();
-                console.log(this._items[i].width);
+                console.log(this._items[i], x, y);
                 break;
             }
         }
@@ -56,10 +57,6 @@ export default class Menu extends Scene {
         for (let i = 0, len = this._items.length; i < len; i++) {
             item = this._items[i];
 
-            ctx.strokeStyle = '#000';
-            ctx.moveTo(item.x, item.y);
-            ctx.lineTo(500, item.y);
-            ctx.stroke();
             ctx.fillText(item.item.getText(), item.x, item.y);
         }
     }

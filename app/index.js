@@ -38,7 +38,10 @@ window.onload = function() {
     }
     
     canvas.canvas.addEventListener('click', function(event) {
-        sceneMenu.onMouseClick(event.offsetX, event.offsetY);
+        sceneMenu.onMouseClick(
+            event.clientX - canvas.canvas.offsetLeft + window.scrollX,
+            event.clientY - canvas.canvas.offsetTop + window.scrollY
+        );
     });
     document.addEventListener('keydown', function(event) {console.log(io.getKey(event))});
 
