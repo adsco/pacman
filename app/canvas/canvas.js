@@ -35,6 +35,10 @@ export default class Canvas {
         this.width = width;
     }
     
+    getWidth() {
+        return this.width;
+    }
+    
     setHeight(height) {
         if (this.canvas) {
             this.canvas.height = height;
@@ -42,6 +46,10 @@ export default class Canvas {
         }
         
         this.height = height;
+    }
+    
+    getHeight() {
+        return this.height;
     }
     
     setFillStyle(style) {

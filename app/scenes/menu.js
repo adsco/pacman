@@ -1,4 +1,5 @@
 import Scene from './scene';
+import InputKey from './../enums/input';
 import {getTextSize} from './../vendors/utils';
 
 /**
@@ -12,23 +13,36 @@ export default class Menu extends Scene {
         this._items = [];
         this._fontSize = 20;
         this._fontFamily = 'serif';
+        this._initialX = 200;
+        this._initialY = 275;
+        this._lineHeight = 30;
     }
     
     addItem(item) {
         var context = this._canvas.getContext();
         var len = this._items.length;
         var size = getTextSize(item.getText(), `${this._fontSize}px`, this._fontFamily);
+        var x = this._initialX;
+        var y = len * this._lineHeight + this._initialY;
 
         this._items.push({
             item,
-            x: 100,
-            // Since base line is text bottom
-            y: len * 25 + 200,
+            x,
+            // Since text is drawn relative to base line
+            y: y - size.height,
             width: size.width,
             height: size.height,
-            endX: 100 + size.width,
-            endY: len * 25 + 200 - size.height
+            endX: x + size.width,
+            endY: y
         });
+        
+        this._cummulativeHeight += size.height;
+        
+        if (size.width > this._maxWidth) {
+            this._maxWidth = size.width;
+        }
+        
+        console.log(this._items);
     }
     
     update(time) {
@@ -36,9 +50,10 @@ export default class Menu extends Scene {
     }
     
     onMouseClick(x, y) {
+        console.log(x, y);
         for (let i = 0, len = this._items.length; i < len; i++) {
             if (this._items[i].x <= x && this._items[i].endX >= x && 
-                this._items[i].endY <= y && this._items[i].y >= y) {
+                this._items[i].y <= y && this._items[i].endY >= y) {
                 this._items[i].item.click();
                 console.log(this._items[i], x, y);
                 break;
@@ -46,18 +61,31 @@ export default class Menu extends Scene {
         }
     }
     
+    onKeyDown(key) {
+        
+    }
+    
     render(time) {
-        var ctx = this._canvas.getContext();
+        var canvas = this._prepareCanvas(this._canvas);;
+        var ctx = canvas.getContext();
         var item;
         
-        // this._canvas.clear();
-        ctx.font = `${this._fontSize}px ${this._fontFamily}`;
-
-        ctx.fillStyle = '#000';
         for (let i = 0, len = this._items.length; i < len; i++) {
             item = this._items[i];
 
-            ctx.fillText(item.item.getText(), item.x, item.y);
+            ctx.fillText(item.item.getText(), this._initialX, this._initialY + i * this._lineHeight);
         }
+    }
+    
+    _prepareCanvas() {
+        var canvas = this._canvas;
+        var ctx = canvas.getContext();
+
+        canvas.clear();
+
+        ctx.font = `${this._fontSize}px ${this._fontFamily}`;
+        ctx.fillStyle = '#000';
+        
+        return canvas;
     }
 }

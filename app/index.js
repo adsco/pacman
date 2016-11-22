@@ -13,6 +13,7 @@ import SceneManager from './scenes/scene-manager';
 import MenuScene from './scenes/menu';
 import GameScene from './scenes/game';
 import MenuItem from './scenes/menu-item';
+import ActorBuilder from './actors/actor-builder';
 
 window.onload = function() {
     var canvas = new Canvas(document.getElementById('game-viewport'));
@@ -23,43 +24,38 @@ window.onload = function() {
     var sceneManager = new SceneManager();
     var sceneMenu = new MenuScene(canvas);
     var sceneGame = new GameScene(canvas);
-    var menuItem = new MenuItem('Menu item 1', function() {
+    var menuItem1Up = new MenuItem('1 player', function() {
         console.log('clicked');
     });
-
-    sceneManager.playScene(sceneMenu);
+    var menuItemQuit = new MenuItem('quit', function() {
+        console.log('quit');
+    });
     
-    sceneMenu.onStop = function() {
-        console.log('Scene menu stopped');
-    }
+    canvas.setWidth(width);
+    canvas.setHeight(height);
     
     sceneGame.onStop = function() {
         console.log('Scene game stopped');
     }
     
-    canvas.canvas.addEventListener('click', function(event) {
-        sceneMenu.onMouseClick(
-            event.clientX - canvas.canvas.offsetLeft + window.scrollX,
-            event.clientY - canvas.canvas.offsetTop + window.scrollY
-        );
+    document.addEventListener('keydown', function(event) {
+        sceneGame.onKeyDown(io.getKey(event));
+        console.log(io.getKey(event));
     });
-    document.addEventListener('keydown', function(event) {console.log(io.getKey(event))});
-
-    canvas.setWidth(width);
-    canvas.setHeight(height);
     
-    sceneMenu.addItem(menuItem);
-    
-    var update = function() {
-        var time = window.performance.now();
+    resourceLoader
+        .loadResource('sprite', 'image', 'resources/images/pacman-google.png')
+        .then((resource) => {
+            var pacman = ActorBuilder.buildPacman(resource.resource);
 
-        sceneMenu.update(time);
-        sceneMenu.render(time);
+            console.log(pacman);
 
-        window.requestAnimationFrame(update);
-    };
-    
-    update();
+            sceneGame.setPacman(pacman);
+        })
+        .then(() => {
+            sceneManager.playScene(sceneGame);
+        })
+    ;
     
     return;
 

@@ -39,7 +39,7 @@ export default (superclass) => class extends superclass {
         var frame;
         
         if (!this._currentAnimation) {
-            throw new Error('Animation to play is not set');
+            return null;
         }
         
         if (this._currentFrameIndex === -1) {

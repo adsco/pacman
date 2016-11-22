@@ -15,6 +15,9 @@ export default class Scene {
        this._onDestroy = null;
        
        this._canvas = null;
+       
+       // Last update call
+       this._timeElapsed = 0;
     }
     
     constructor(canvas) {
