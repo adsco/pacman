@@ -46,11 +46,13 @@ window.onload = function() {
     resourceLoader
         .loadResource('sprite', 'image', 'resources/images/pacman-google.png')
         .then((resource) => {
-            var pacman = ActorBuilder.buildPacman(resource.resource);
+            var pacman = ActorBuilder.build('pacman', resource.resource);
+            var blinky = ActorBuilder.build('blinky', resource.resource);
 
             console.log(pacman);
 
             sceneGame.setPacman(pacman);
+            sceneGame.setBlinky(blinky);
         })
         .then(() => {
             sceneManager.playScene(sceneGame);
