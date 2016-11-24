@@ -48,11 +48,13 @@ window.onload = function() {
         .then((resource) => {
             var pacman = ActorBuilder.build('pacman', resource.resource);
             var blinky = ActorBuilder.build('blinky', resource.resource);
+            var pinky = ActorBuilder.build('pinky', resource.resource);
 
             console.log(pacman);
 
             sceneGame.setPacman(pacman);
             sceneGame.setBlinky(blinky);
+            sceneGame.setPinky(pinky);
         })
         .then(() => {
             sceneManager.playScene(sceneGame);
