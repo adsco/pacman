@@ -1,11 +1,13 @@
 import Pacman from './pacman';
 import Blinky from './blinky';
 import Pinky from './pinky';
+import Inky from './inky';
 import Frame from './../animation/frame';
 import FrameSet from './../animation/frame-set';
 import pacmanConfig from './pacman-animation-config';
 import blinkyConfig from './blinky-animation-config';
 import pinkyConfig from './pinky-animation-config';
+import inkyConfig from './inky-animation-config';
 
 function createActor(id) {
     var actor;
@@ -21,6 +23,10 @@ function createActor(id) {
         }
         case 'pinky': {
             actor = new Pinky();
+            break;
+        }
+        case 'inky': {
+            actor = new Inky();
             break;
         }
     }
@@ -42,6 +48,10 @@ function getActorCofig(id) {
         }
         case 'pinky': {
             config = pinkyConfig;
+            break;
+        }
+        case 'inky': {
+            config = inkyConfig;
             break;
         }
     }
