@@ -10,6 +10,7 @@ export default class GameScene extends Scene {
         this._blinky = null;
         this._pinky = null;
         this._inky = null;
+        this._clyde = null;
     }
     
     getPacman() {
@@ -44,6 +45,14 @@ export default class GameScene extends Scene {
         this._inky = inky;
     }
     
+    getClyde() {
+        return this._clyde;
+    }
+    
+    setClyde(clyde) {
+        this._clyde = clyde;
+    }
+    
     onKeyDown(key) {
         switch (key) {
             case InputKey.UP: {
@@ -51,6 +60,7 @@ export default class GameScene extends Scene {
                 this._blinky.setDirection(Direction.TOP);
                 this._pinky.setDirection(Direction.TOP);
                 this._inky.setDirection(Direction.TOP);
+                this._clyde.setDirection(Direction.TOP);
                 break;
             }
             case InputKey.RIGHT: {
@@ -58,6 +68,7 @@ export default class GameScene extends Scene {
                 this._blinky.setDirection(Direction.RIGHT);
                 this._pinky.setDirection(Direction.RIGHT);
                 this._inky.setDirection(Direction.RIGHT);
+                this._clyde.setDirection(Direction.RIGHT);
                 break;
             }
             case InputKey.DOWN: {
@@ -65,6 +76,7 @@ export default class GameScene extends Scene {
                 this._blinky.setDirection(Direction.BOTTOM);
                 this._pinky.setDirection(Direction.BOTTOM);
                 this._inky.setDirection(Direction.BOTTOM);
+                this._clyde.setDirection(Direction.BOTTOM);
                 break;
             }
             case InputKey.LEFT: {
@@ -72,6 +84,7 @@ export default class GameScene extends Scene {
                 this._blinky.setDirection(Direction.LEFT);
                 this._pinky.setDirection(Direction.LEFT);
                 this._inky.setDirection(Direction.LEFT);
+                this._clyde.setDirection(Direction.LEFT);
                 break;
             }
             case InputKey.ESC: {
@@ -79,6 +92,7 @@ export default class GameScene extends Scene {
                 this._blinky.setDirection('eyesMoveLeft');
                 this._pinky.setDirection('eyesMoveLeft');
                 this._inky.setDirection('eyesMoveLeft');
+                this._clyde.setDirection('eyesMoveLeft');
                 break;
             }
             case InputKey.ENTER: {
@@ -86,6 +100,7 @@ export default class GameScene extends Scene {
                 this._blinky.startAnimation('frighten');
                 this._pinky.startAnimation('frighten');
                 this._inky.startAnimation('frighten');
+                this._clyde.startAnimation('frighten');
                 break;
             }
         }
@@ -101,6 +116,7 @@ export default class GameScene extends Scene {
         this._blinky.update(this, time);
         this._pinky.update(this, time);
         this._inky.update(this, time);
+        this._clyde.update(this, time);
     }
     
     render(time) {
@@ -115,5 +131,6 @@ export default class GameScene extends Scene {
         this._blinky.render(ctx, time);
         this._pinky.render(ctx, time);
         this._inky.render(ctx, time);
+        this._clyde.render(ctx, time);
     }
 }

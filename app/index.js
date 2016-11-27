@@ -50,6 +50,7 @@ window.onload = function() {
             var blinky = ActorBuilder.build('blinky', resource.resource);
             var pinky = ActorBuilder.build('pinky', resource.resource);
             var inky = ActorBuilder.build('inky', resource.resource);
+            var clyde = ActorBuilder.build('clyde', resource.resource);
 
             console.log(pacman);
 
@@ -57,6 +58,7 @@ window.onload = function() {
             sceneGame.setBlinky(blinky);
             sceneGame.setPinky(pinky);
             sceneGame.setInky(inky);
+            sceneGame.setClyde(clyde);
         })
         .then(() => {
             sceneManager.playScene(sceneGame);
