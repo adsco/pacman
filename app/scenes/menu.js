@@ -1,91 +1,102 @@
 import Scene from './scene';
-import InputKey from './../enums/input';
-import {getTextSize} from './../vendors/utils';
+import ResourceLoader from '../loaders/resource-loader';
+import Pen from '../menus/pen';
+import MenuItem from '../menus/item';
+import Menu from '../menus/menu';
+import IO from '../io/io';
+import App from '../app';
 
 /**
  * Base menu class, menu takes control of a game, same as scene, should inherit from scene
  */
-
-export default class Menu extends Scene {
+export default class SceneMenu extends Scene {
     constructor() {
         super(...arguments);
-        
-        this._items = [];
-        this._fontSize = 20;
-        this._fontFamily = 'serif';
-        this._initialX = 200;
-        this._initialY = 275;
-        this._lineHeight = 30;
-    }
-    
-    addItem(item) {
-        var context = this._canvas.getContext();
-        var len = this._items.length;
-        var size = getTextSize(item.getText(), `${this._fontSize}px`, this._fontFamily);
-        var x = this._initialX;
-        var y = len * this._lineHeight + this._initialY;
 
-        this._items.push({
-            item,
-            x,
-            // Since text is drawn relative to base line
-            y: y - size.height,
-            width: size.width,
-            height: size.height,
-            endX: x + size.width,
-            endY: y
-        });
-        
-        this._cummulativeHeight += size.height;
-        
-        if (size.width > this._maxWidth) {
-            this._maxWidth = size.width;
-        }
-        
-        console.log(this._items);
+        this._sprite = null;
+        this._pen = null;
+        this._menu = null;
+        this._selectedItemIndex = 0;
     }
     
-    update(time) {
-        
+    static get EVENT_1_PLAYER_SELECT() {
+        return 'event_1_player_select';
     }
     
-    onMouseClick(x, y) {
-        console.log(x, y);
-        for (let i = 0, len = this._items.length; i < len; i++) {
-            if (this._items[i].x <= x && this._items[i].endX >= x && 
-                this._items[i].y <= y && this._items[i].endY >= y) {
-                this._items[i].item.click();
-                console.log(this._items[i], x, y);
+    static get EVENT_CREDITS_SELECT() {
+        return 'event_credits_select';
+    }
+    
+    getResources() {
+        return [{
+            type: 'image',
+            url: 'resources/images/font.png'
+        }];
+    }
+
+    /**
+     * Preload resources required by this scene
+     */
+    prepare(resources) {
+        var pen = new Pen(resources[0]);
+        var menu = new Menu();
+        
+        menu.addItem(new MenuItem(pen, '1 player'));
+        menu.addItem(new MenuItem(pen, 'credits'));
+
+        menu.selectItem(this._selectedItemIndex);
+
+        this._pen = pen;
+        this._menu = menu;
+        
+        return this;
+    }
+    
+    /**
+     * Handle user input
+     */
+    input(action) {
+        var oldIndex = this._selectedItemIndex;
+
+        switch (action) {
+            case IO.UP: {
+                this._selectedItemIndex = Math.max(this._selectedItemIndex - 1, 0);
+                break;
+            }
+            
+            case IO.DOWN: {
+                this._selectedItemIndex = Math.min(this._menu.items.length - 1, this._selectedItemIndex + 1);
+                break;
+            }
+            
+            case IO.START: {
+                switch (this._selectedItemIndex) {
+                    case 0: {
+                        this.triggerEvent(SceneMenu.EVENT_1_PLAYER_SELECT);
+                        break;
+                    }
+                    case 1: {
+                        this.triggerEvent(SceneMenu.EVENT_CREDITS_SELECT);
+                        break;
+                    }
+                }
+
                 break;
             }
         }
-    }
-    
-    onKeyDown(key) {
         
-    }
-    
-    render(time) {
-        var canvas = this._prepareCanvas(this._canvas);;
-        var ctx = canvas.getContext();
-        var item;
-        
-        for (let i = 0, len = this._items.length; i < len; i++) {
-            item = this._items[i];
-
-            ctx.fillText(item.item.getText(), this._initialX, this._initialY + i * this._lineHeight);
+        if (oldIndex !== this._selectedItemIndex) {
+            this._menu.deselectItem(oldIndex);
         }
+        
+        this._menu.selectItem(this._selectedItemIndex);
     }
     
-    _prepareCanvas() {
-        var canvas = this._canvas;
-        var ctx = canvas.getContext();
-
-        canvas.clear();
-
-        ctx.font = `${this._fontSize}px ${this._fontFamily}`;
-        ctx.fillStyle = '#000';
+    update() {
         
-        return canvas;
+    }
+    
+    render(context) {
+        this._menu.render(context, 80, 132);
     }
 }

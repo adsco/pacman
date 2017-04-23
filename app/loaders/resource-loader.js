@@ -50,32 +50,26 @@ export default class ResourceLoader {
         }
     }
     
-    loadResource(id, type, url) {
+    loadResource(type, url) {
         return new Promise((resolve, reject) => {
             let instance = this._createInstance(
                 this._getTypeClass(type)
             );
             
             instance.onload = function() {
-                resolve({
-                    id,
-                    type,
-                    resource: instance
-                })
+                resolve(instance);
             }
             
             instance.src = url;
         });
     }
     
-    loadResources() {
+    loadResources(resources) {
         var promises = [];
-        var resources = this._resources;
-        
+
         for (let i = 0, len = resources.length; i < len; i++) {
             promises.push(
                 this.loadResource(
-                    resources[i].id,
                     resources[i].type,
                     resources[i].url
                 )

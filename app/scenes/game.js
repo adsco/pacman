@@ -1,136 +1,67 @@
 import Scene from './scene';
-import InputKey from './../enums/input';
-import Direction from './../enums/direction';
+import IO from '../io/io';
+import Map from '../levels/map';
+import Pen from '../menus/pen';
+import IconPen from '../menus/icon-pen';
 
-export default class GameScene extends Scene {
+export default class SceneGame extends Scene {
     constructor() {
         super(...arguments);
         
-        this._pacman = null;
-        this._blinky = null;
-        this._pinky = null;
-        this._inky = null;
-        this._clyde = null;
+        this._map = null;
+        this._pen = null;
+        this._iconPen = null;
     }
     
-    getPacman() {
-        return this._pacman;
+    static get EVENT_GAME_END() {
+        return 'event_game_end';
     }
     
-    setPacman(pacman) {
-        this._pacman = pacman;
+    getResources() {
+        return [{
+            type: 'image',
+            url: 'resources/images/main_sprite.png'
+        }, {
+            type: 'image',
+            url: 'resources/images/font.png'
+        }];
     }
     
-    getBlinky() {
-        return this._blinky;
-    }
-    
-    setBlinky(blinky) {
-        this._blinky = blinky;
-    }
-    
-    getPinky() {
-        return this._pinky;
-    }
-    
-    setPinky(pinky) {
-        this._pinky = pinky;
-    }
-    
-    getInky() {
-        return this._inky;
-    }
-    
-    setInky(inky) {
-        this._inky = inky;
-    }
-    
-    getClyde() {
-        return this._clyde;
-    }
-    
-    setClyde(clyde) {
-        this._clyde = clyde;
-    }
-    
-    onKeyDown(key) {
-        switch (key) {
-            case InputKey.UP: {
-                this._pacman.setDirection(Direction.TOP);
-                this._blinky.setDirection(Direction.TOP);
-                this._pinky.setDirection(Direction.TOP);
-                this._inky.setDirection(Direction.TOP);
-                this._clyde.setDirection(Direction.TOP);
-                break;
-            }
-            case InputKey.RIGHT: {
-                this._pacman.setDirection(Direction.RIGHT);
-                this._blinky.setDirection(Direction.RIGHT);
-                this._pinky.setDirection(Direction.RIGHT);
-                this._inky.setDirection(Direction.RIGHT);
-                this._clyde.setDirection(Direction.RIGHT);
-                break;
-            }
-            case InputKey.DOWN: {
-                this._pacman.setDirection(Direction.BOTTOM);
-                this._blinky.setDirection(Direction.BOTTOM);
-                this._pinky.setDirection(Direction.BOTTOM);
-                this._inky.setDirection(Direction.BOTTOM);
-                this._clyde.setDirection(Direction.BOTTOM);
-                break;
-            }
-            case InputKey.LEFT: {
-                this._pacman.setDirection(Direction.LEFT);
-                this._blinky.setDirection(Direction.LEFT);
-                this._pinky.setDirection(Direction.LEFT);
-                this._inky.setDirection(Direction.LEFT);
-                this._clyde.setDirection(Direction.LEFT);
-                break;
-            }
-            case InputKey.ESC: {
-                this._pacman.setDirection(null);
-                this._blinky.setDirection('eyesMoveLeft');
-                this._pinky.setDirection('eyesMoveLeft');
-                this._inky.setDirection('eyesMoveLeft');
-                this._clyde.setDirection('eyesMoveLeft');
-                break;
-            }
-            case InputKey.ENTER: {
-                this._pacman.startAnimation('death');
-                this._blinky.startAnimation('frighten');
-                this._pinky.startAnimation('frighten');
-                this._inky.startAnimation('frighten');
-                this._clyde.startAnimation('frighten');
-                break;
-            }
-        }
-    }
-    
-    update(time) {
-        if (this._timeElapsed === 0) {
-            this._pacman.setDirection(Direction.LEFT);
-            this._timeElapsed = time;
-        }
-
-        this._pacman.update(this, time);
-        this._blinky.update(this, time);
-        this._pinky.update(this, time);
-        this._inky.update(this, time);
-        this._clyde.update(this, time);
-    }
-    
-    render(time) {
-        var ctx = this._canvas.getContext();
+    prepare(resources) {
+        this._map = new Map(resources[0]);
+        this._pen = new Pen(resources[1]);
+        this._iconPen = new IconPen(resources[0]);
         
-        this._canvas.clear();
-
-        ctx.fillStyle = '#000';
-        ctx.fillRect(0, 0, this._canvas.getWidth(), this._canvas.getHeight());
-
-        this._pacman.render(ctx, time);
-        this._blinky.render(ctx, time);
-        this._pinky.render(ctx, time);
-        this._inky.render(ctx, time);
-        this._clyde.render(ctx, time);
+        return this;
+    }
+    
+    start() {
+        
+    }
+    
+    finish() {
+        
+    }
+    
+    input(action) {
+        switch (action) {
+            case IO.START: {
+                this.triggerEvent(SceneGame.EVENT_GAME_END);
+                break;
+            }
+        }
+    }
+    
+    update() {
+        
+    }
+    
+    render(context) {
+        this._map.render(context, 0, 24);
+        this._pen.write('1UP', context, 24);
+        this._pen.write('HIGH SCORE', context, 72);
+        this._pen.write('00', context, 40, 8);
+        this._iconPen.write(['life', 'life', 'life'], context, 0, 272);
+        this._iconPen.write(['bonus_cherry'], context, 180, 272);
     }
 }

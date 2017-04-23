@@ -1,25 +1,58 @@
 export default class IO {
-    _setupProperties() {
-        this._gameKeys = {};
+    constructor(context) {
+        this._context = context;
+        this._callback = null;
+        this._keyMap = [{
+            keys: [87, 38],
+            action: IO.UP
+        }, {
+            keys: [68, 39],
+            action: IO.RIGHT
+        }, {
+            keys: [83, 40],
+            action: IO.DOWN
+        }, {
+            keys: [65, 37],
+            action: IO.LEFT
+        }, {
+            keys: [13],
+            action: IO.START
+        }];
     }
     
-    constructor(gameKeys) {
-        this._setupProperties();
-        
-        this._gameKeys = gameKeys;
+    static get UP() {
+        return 'up';
     }
     
-    getKey(event) {
-        var keyCode = event.keyCode;
-        var gameKey = null;
-        
-        for (let key in this._gameKeys) {
-            if (this._gameKeys[key].indexOf(keyCode) !== -1) {
-                gameKey = key;
-                break;
+    static get RIGHT() {
+        return 'right';
+    }
+    
+    static get DOWN() {
+        return 'down';
+    }
+    
+    static get LEFT() {
+        return 'left';
+    }
+    
+    static get START() {
+        return 'start';
+    }
+    
+    activate(scene) {
+        this._context.addEventListener('keydown', (event) => {
+            let keyCode = event.keyCode;
+            let key = null;
+            
+            for (let i = 0, len = this._keyMap.length; i < len; i++) {
+                if (this._keyMap[i].keys.includes(keyCode)) {
+                    key = this._keyMap[i].action;
+                    break;
+                }
             }
-        }
-        
-        return gameKey;
+            
+            scene.processInput(key);
+        });
     }
 }

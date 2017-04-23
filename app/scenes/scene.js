@@ -1,78 +1,68 @@
+import Eventable from '../mixins/eventable';
+
 /**
  * Basic scene
  */
-
-export default class Scene {
-    _setupProperties() {
-        /**
-        * @property {Boolean} _paused - is current scene is paused or not
-        */
-       this._paused = false;
-
-       /**
-        * @property {Function} _onDestroy - callback to be invoked on scene destruction
-        */
-       this._onDestroy = null;
-       
-       this._canvas = null;
-       
-       // Last update call
-       this._timeElapsed = 0;
-    }
-    
-    constructor(canvas) {
-        this._setupProperties();
-        
-        this._canvas = canvas;
+export default class Scene extends Eventable {
+    /**
+     * Constructor
+     */
+    constructor() {
+        super(...arguments);
     }
     
     /**
-     * Scene entry point, used by scene manager
+     * Return list of required by scene resources, will be provided in prepare method
      */
-    play() {
-        // Do initial preparations here
+    getResources() {
+        return [];
     }
     
-    update(time) {
+    /**
+     * Prepare game scene, load resources, cache, etc.
+     */
+    prepare() {
+        this.ready = true;
         
+        return this;
     }
     
-    render(time) {
-        
+    /**
+     * Method to be invoked right after prepare method
+     */
+    start() {
+        return this;
     }
     
-    onMouseClick() {
-        
+    /**
+     * Method to be invoked before scene deactivation
+     */
+    finish() {
+        return this;
     }
     
-    onKeyDown(key) {
-        
-    }
-    
-    onStop() {
-        
-    }
-    
-    onDestroy() {
+    /**
+     * Method invoked on user interaction
+     * 
+     * @param {String} action - action name defined in io
+     */
+    input(action) {
         
     }
     
     /**
-     * Scene exit point, used by scene manager, to force scene end and future clean up
+     * Update scene state
      */
-    stop() {
-        if (typeof this.onStop === 'function') {
-            this.onStop();
-        };
-        // Do clean up here
+    update() {
+        
     }
     
     /**
-     * Same as stop but, this one will invoke onDestroy callback after calling stop
+     * Render scene
+     * 
+     * @param {Canvas2DContext} context - canvas context to draw on
      */
-    destroy() {
-        if (typeof this.onDestroy === 'function') {
-            this.onDestroy(this);
-        }
+    render(context) {
+        
     }
 }

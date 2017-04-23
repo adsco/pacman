@@ -9,6 +9,7 @@ export default class Canvas {
         this.canvas = null;
         this.width = 0;
         this.height = 0;
+        this.magnify = 1;
     }
     
     constructor(canvas) {
@@ -18,7 +19,7 @@ export default class Canvas {
             throw new Error('Canvas required');
         }
 
-        this.canvas = canvas;
+        this.element = canvas;
         this._context = canvas.getContext('2d');
     }
     
@@ -27,9 +28,9 @@ export default class Canvas {
     }
     
     setWidth(width) {
-        if (this.canvas) {
-            this.canvas.width = width;
-            this.canvas.style.width = width + 'px';
+        if (this.element) {
+            this.element.width = width;
+            this.element.style.width = (width * this.magnify) + 'px';
         }
         
         this.width = width;
@@ -40,9 +41,9 @@ export default class Canvas {
     }
     
     setHeight(height) {
-        if (this.canvas) {
-            this.canvas.height = height;
-            this.canvas.style.height = height + 'px';
+        if (this.element) {
+            this.element.height = height;
+            this.element.style.height = (height * this.magnify) + 'px';
         }
         
         this.height = height;
@@ -57,7 +58,7 @@ export default class Canvas {
     }
     
     on(eventName, callback) {
-        this.canvas.addEventListener(eventName, callback);
+        this.element.addEventListener(eventName, callback);
     }
     
     drawRect(color, x, y, width, height) {
