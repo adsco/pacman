@@ -20,7 +20,7 @@ export default class SceneGame extends Scene {
     getResources() {
         return [{
             type: 'image',
-            url: 'resources/images/main_sprite.png'
+            url: 'resources/images/sprite_general.png'
         }, {
             type: 'image',
             url: 'resources/images/font.png'
@@ -63,5 +63,9 @@ export default class SceneGame extends Scene {
         this._pen.write('00', context, 40, 8);
         this._iconPen.write(['life', 'life', 'life'], context, 0, 272);
         this._iconPen.write(['bonus_cherry'], context, 180, 272);
+        this._iconPen.write(['ready'], context, 88, 160);
+        this._iconPen.write(['pie'], context, 8, 32);
+        this._iconPen.write(['pie'], context, 8, 40);
+        this._iconPen.write(['energizer'], context, 8, 48);
     }
 }

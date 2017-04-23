@@ -36,9 +36,13 @@ export default class IconPen {
         pen.addSymbol('bonus_red_apple_1', new Frame(sprite, 16, 16, 258, 93));
         pen.addSymbol('bonus_red_apple_2', new Frame(sprite, 16, 16, 274, 93));
         pen.addSymbol('bonus_orange_apple_1', new Frame(sprite, 16, 16, 290, 93));
-        pen.addSymbol('bonus_orange_apple_2', new Frame(sprite, 16, 16, 242, 109));
-        pen.addSymbol('bonus_strawberry', new Frame(sprite, 16, 16, 258, 109));
-        pen.addSymbol('bonus_cherry', new Frame(sprite, 16, 16, 274, 109));
+        pen.addSymbol('bonus_orange_apple_2', new Frame(sprite, 16, 16, 242, 110));
+        pen.addSymbol('bonus_strawberry', new Frame(sprite, 16, 16, 258, 110));
+        pen.addSymbol('bonus_cherry', new Frame(sprite, 16, 16, 274, 110));
+        pen.addSymbol('ready', new Frame(sprite, 47, 8, 318, 245));
+        pen.addSymbol('game_over', new Frame(sprite, 80, 8, 231, 245));
+        pen.addSymbol('pie', new Frame(sprite, 8, 8, 290, 78));
+        pen.addSymbol('energizer', new Frame(sprite, 8, 8, 299, 79));
         
         return pen;
     }
