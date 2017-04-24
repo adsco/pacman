@@ -85,7 +85,7 @@ export default class PacmanGame {
         this._context.fillRect(0, 0, 224, 288);
 
         this._activeScene.update();
-        this._activeScene.render(this._context);
+        this._activeScene.render(this._context, time);
 
         window.requestAnimationFrame(this.update);
     }

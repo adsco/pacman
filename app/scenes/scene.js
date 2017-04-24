@@ -61,8 +61,9 @@ export default class Scene extends Eventable {
      * Render scene
      * 
      * @param {Canvas2DContext} context - canvas context to draw on
+     * @param {Number} time - current elapsed time of application, time passed since application start
      */
-    render(context) {
+    render(context, time) {
         
     }
 }

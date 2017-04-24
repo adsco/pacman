@@ -96,7 +96,7 @@ export default class SceneMenu extends Scene {
         
     }
     
-    render(context) {
+    render(context, time) {
         this._menu.render(context, 80, 132);
     }
 }

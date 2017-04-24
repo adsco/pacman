@@ -11,7 +11,7 @@
     "PACMAN"
   ],
   "devDependencies": {
-      
+    "layer": "adsco-layer#v0.0.2"
   },
   "homepage": "https://github.com/adsco/pacman",
   "ignore": [

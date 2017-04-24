@@ -34,7 +34,7 @@ export default class SceneCredits extends Scene {
         }
     }
     
-    render(context) {
+    render(context, time) {
         this._pen.write('Credits to developers', context, 28, 140);
     }
 }

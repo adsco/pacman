@@ -49,6 +49,14 @@ export default class SceneGame extends Scene {
                 this.triggerEvent(SceneGame.EVENT_GAME_END);
                 break;
             }
+            case IO.UP: {
+                this._map.playAnimation(Map.ANIMATION_FLASHING);
+                break;
+            }
+            case IO.DOWN: {
+                this._map.playAnimation(Map.ANIMATION_DEFAULT);
+                break;
+            }
         }
     }
     
@@ -56,8 +64,8 @@ export default class SceneGame extends Scene {
         
     }
     
-    render(context) {
-        this._map.render(context, 0, 24);
+    render(context, time) {
+        this._map.render(context, time, 0, 24);
         this._pen.write('1UP', context, 24);
         this._pen.write('HIGH SCORE', context, 72);
         this._pen.write('00', context, 40, 8);
