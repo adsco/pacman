@@ -1,105 +1,99 @@
-import ActorLayer from './../layers/actor';
-import Direction from './../enums/direction';
+import AnimatedLayer from '../../bower_components/layer/animation/animated';
+import StaticLayer from '../../bower_components/layer/animation/static';
+import Frame from '../../bower_components/layer/frame/frame';
 
-export default class Pacman extends ActorLayer {
-    constructor() {
-        super(...arguments);
+export default class Pacman {
+    constructor(sprite) {
+        this._sprite = sprite;
+        this._animations = {};
+        this._width = 16;
+        this._height = 16;
+        this._activeAnimation = null;
+//        this._positionOffsetX = ;
+//        this._positionOffsetY = ;
+
+        // Tile coordinates
+        this._positionX = 0;
+        this._positionY = 0;
         
-        this.direction = null;
-    }
-    
-    setDirection(direction) {
-        var animationName = this._getAnimationName(direction);
-
-        this._direction = direction;
-
-        this.startAnimation(animationName);
-    }
-    
-    update(game, time) {
-        var speedX = this._getSpeedX();
-        var speedY = this._getSpeedY();
-
-        if (this.x > 0) {
-            this.x += speedX;
-        }
+        this._initAnimations(sprite);
         
-        if (this.y > 0) {
-            this.y += speedY;
-        }
+        this.setAnimation(Pacman.ANIMATION_MOVE_LEFT);
     }
     
-    render(ctx, time) {
-        var frame = this.getFrame(time);
-
-        if (frame) {
-            ctx.drawImage(
-                frame.image,
-                frame.x,
-                frame.y,
-                frame.width,
-                frame.height,
-                this.x + frame.shiftX,
-                this.y + frame.shiftY,
-                frame.width,
-                frame.height
-            );
-        }
+    static get ANIMATION_MOVE_UP() {
+        return 'moveUp';
     }
     
-    _getSpeedX() {
-        var speedX = 0;
-
-        if (this._direction === Direction.LEFT) {
-            speedX = -1;
-        } else if (this._direction === Direction.RIGHT) {
-            speedX = 1;
-        }
-        
-        return speedX;
+    static get ANIMATION_MOVE_RIGHT() {
+        return 'moveRight';
     }
     
-    _getSpeedY() {
-        var speedY = 0;
-
-        if (this._direction === Direction.TOP) {
-            speedY = -1;
-        } else if (this._direction === Direction.BOTTOM) {
-            speedY = 1;
-        }
-        
-        return speedY;
+    static get ANIMATION_MOVE_DOWN() {
+        return 'moveDown';
     }
     
-    _getAnimationName(direction) {
-        var animationName = 'idle';
-
-        switch (direction) {
-            case Direction.LEFT: {
-                animationName = 'moveLeft';
-                
-                break;
-            }
-            
-            case Direction.TOP: {
-                animationName = 'moveTop';
-                
-                break;
-            }
-            
-            case Direction.RIGHT: {
-                animationName = 'moveRight';
-                
-                break;
-            }
-            
-            case Direction.BOTTOM: {
-                animationName = 'moveBottom';
-                
-                break;
-            }
+    static get ANIMATION_MOVE_LEFT() {
+        return 'moveLeft';
+    }
+    
+    set positionX(x) {
+        this._positionX = x;
+    }
+    
+    set positionY(y) {
+        this._positionY = y;
+    }
+    
+    get position() {
+        return {
+            x: this._positionX,
+            y: this._positionY
+        };
+    }
+    
+    _initAnimations(sprite) {
+        this._animations.moveUp = new AnimatedLayer([
+            new Frame(sprite, 16, 16, 267, 162),
+            new Frame(sprite, 16, 16, 267, 146),
+            new Frame(sprite, 16, 16, 266, 131)
+        ], 18, true);
+        this._animations.moveRight = new AnimatedLayer([
+            new Frame(sprite, 16, 16, 267, 162),
+            new Frame(sprite, 16, 16, 283, 162),
+            new Frame(sprite, 16, 16, 300, 162)
+        ], 18, true);
+        this._animations.moveDown = new AnimatedLayer([
+            new Frame(sprite, 16, 16, 267, 162),
+            new Frame(sprite, 16, 16, 267, 178),
+            new Frame(sprite, 16, 16, 267, 194)
+        ], 18, true);
+        this._animations.moveLeft = new AnimatedLayer([
+            new Frame(sprite, 16, 16, 267, 162),
+            new Frame(sprite, 16, 16, 251, 162),
+            new Frame(sprite, 16, 16, 236, 162)
+        ], 18, true);
+    }
+    
+    setAnimation(animation) {
+        if (!this._animations.hasOwnProperty(animation)) {
+            throw new Error(`Animation "${animation}" doesn't registered`);
         }
         
-        return animationName;
+        if (this._activeAnimation) {
+            this._activeAnimation.reset();
+        }
+        
+        this._activeAnimation = this._animations[animation];
+
+        this._activeAnimation.play();
+    }
+    
+    update() {
+        
+    }
+    
+    render(context, time) {
+        this._activeAnimation.render(context, time, 100, 100);
     }
 }

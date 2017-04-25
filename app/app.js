@@ -82,6 +82,8 @@ export default class PacmanGame {
         let time = window.performance.now();
 
         this._canvas.clear();
+        
+        this._context.fillStyle = '#000';
         this._context.fillRect(0, 0, 224, 288);
 
         this._activeScene.update();

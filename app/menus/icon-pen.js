@@ -1,4 +1,5 @@
 import Frame from './../../bower_components/layer/frame/frame';
+import AnimationLayer from './../../bower_components/layer/animation/animated';
 
 class IconText {
     constructor() {
@@ -9,16 +10,19 @@ class IconText {
 		this._symbols[id] = frame;
 	}
 
-	render(symbols, context, x, y) {
+	render(symbols, context, time, x, y) {
         var offsetX = 0;
 		var frame;
         
 		for (var i = 0, len = symbols.length; i < len; i++) {
 			frame = this._symbols[symbols[i]];
-
-			frame.render(context, x + offsetX, y);
-
-			offsetX += frame.width;
+            
+            if (frame instanceof AnimationLayer) {
+                frame.render(context, time, x + offsetX, y);
+            } else {
+                frame.render(context, x + offsetX, y);
+                offsetX += frame.width;
+            }
 		}
 	}
 }
@@ -41,13 +45,16 @@ export default class IconPen {
         pen.addSymbol('bonus_cherry', new Frame(sprite, 16, 16, 274, 110));
         pen.addSymbol('ready', new Frame(sprite, 47, 8, 318, 245));
         pen.addSymbol('game_over', new Frame(sprite, 80, 8, 231, 245));
-        pen.addSymbol('pie', new Frame(sprite, 8, 8, 290, 78));
-        pen.addSymbol('energizer', new Frame(sprite, 8, 8, 299, 79));
+        pen.addSymbol('dot', new Frame(sprite, 8, 8, 290, 78));
+        pen.addSymbol('energizer', new AnimationLayer([
+            new Frame(sprite, 8, 8, 299, 79),
+            new Frame(sprite, 8, 8, 308, 74)
+        ], 6, true));
         
         return pen;
     }
     
-    write(symbols, context, offsetX, offsetY) {
-        this._pen.render(symbols, context, offsetX, offsetY);
+    write(symbols, context, time, offsetX, offsetY) {
+        this._pen.render(symbols, context, time, offsetX, offsetY);
     }
 }
