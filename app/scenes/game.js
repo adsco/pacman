@@ -3,9 +3,11 @@ import IO from '../io/io';
 import Map from '../levels/map';
 import DotMap from '../levels/dot-map';
 import GeoDataMap from '../levels/geo-data';
+import Barrier from '../levels/barrier';
 import Pen from '../menus/pen';
 import IconPen from '../menus/icon-pen';
 import Pacman from '../actors/pacman';
+import Physics2D from '../physics-2d';
 
 export default class SceneGame extends Scene {
     constructor() {
@@ -14,6 +16,8 @@ export default class SceneGame extends Scene {
         this._map = null;
         this._pen = null;
         this._iconPen = null;
+        this._barrier = null;
+        this._showBarrier = true;
         this._debug = true;
     }
     
@@ -36,12 +40,34 @@ export default class SceneGame extends Scene {
         this._pen = new Pen(resources[1]);
         this._iconPen = new IconPen(resources[0]);
         this._pacman = new Pacman(resources[0]);
+        this._barrier = new Barrier(resources[0], 103, 120);
+        
+        for (let i = 0; i < 36; i++) {
+            for (let j = 0; j < 28; j++) {
+                if (GeoDataMap[i][j]) {
+                    Physics2D.register(j, i, 1, 1, 'environment');
+                }
+            }
+        }
+        
+        Physics2D.register(
+            Math.round(this._barrier.positionX / 8),
+            Math.round(this._barrier.positionY / 8),
+            Math.round(this._barrier.width / 8),
+            Math.round(this._barrier.height / 8),
+            'barrier'
+        );
+
+        Physics2D.printDebug();
         
         return this;
     }
     
     start() {
-        
+        this._pacman.positionX = 105;
+        this._pacman.positionY = 208;
+        this._pacman.speed = 1.33;
+        this._pacman.direction = Pacman.DIRECTION_LEFT;
     }
     
     finish() {
@@ -56,31 +82,36 @@ export default class SceneGame extends Scene {
             }
             case IO.UP: {
                 this._map.playAnimation(Map.ANIMATION_FLASHING);
-                this._pacman.setAnimation(Pacman.ANIMATION_MOVE_UP);
+                this._pacman.direction = Pacman.DIRECTION_UP;
                 break;
             }
             case IO.RIGHT: {
-                this._pacman.setAnimation(Pacman.ANIMATION_MOVE_RIGHT);
+                this._pacman.direction = Pacman.DIRECTION_RIGHT;
                 break;
             }
             case IO.DOWN: {
                 this._map.playAnimation(Map.ANIMATION_DEFAULT);
-                this._pacman.setAnimation(Pacman.ANIMATION_MOVE_DOWN);
+                this._pacman.direction = Pacman.DIRECTION_DOWN;
                 break;
             }
             case IO.LEFT: {
-                this._pacman.setAnimation(Pacman.ANIMATION_MOVE_LEFT);
+                this._pacman.direction = Pacman.DIRECTION_LEFT;
                 break;
             }
         }
     }
     
     update() {
-        
+        this._pacman.update();
     }
     
     render(context, time) {
         this._map.render(context, time, 0, 24);
+        
+        if (this._showBarrier) {
+            this._barrier.render(context, time);
+        }
+        
         this._pen.write('1UP', context, 24);
         this._pen.write('HIGH SCORE', context, 72);
         this._pen.write('00', context, 40, 8);
@@ -95,17 +126,7 @@ export default class SceneGame extends Scene {
         }
         
         if (this._debug) {
-            for (let i = 0; i < 36; i++) {
-                for (let j = 0; j < 28; j++) {
-                    if (GeoDataMap[i][j]) {
-                        context.strokeStyle = '#4caf50';
-                    } else {
-                        context.strokeStyle = '#af4c51';
-                    }
-
-                    context.strokeRect(j * 8, i * 8, 8, 8);
-                }
-            }
+            Physics2D.render(context);
         }
     }
 }
