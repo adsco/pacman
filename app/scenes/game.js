@@ -118,7 +118,6 @@ export default class SceneGame extends Scene {
         this._iconPen.write(['life', 'life', 'life'], context, time, 0, 272);
         this._iconPen.write(['bonus_cherry'], context, time, 180, 272);
         this._iconPen.write(['ready'], context, time, 88, 160);
-        this._pacman.render(context, time);
         
         // Render dot map
         for (let i = 0, len = DotMap.length; i < len; i++) {
@@ -128,5 +127,7 @@ export default class SceneGame extends Scene {
         if (this._debug) {
             Physics2D.render(context);
         }
+        
+        this._pacman.render(context, time);
     }
 }
