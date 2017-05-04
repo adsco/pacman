@@ -47,6 +47,16 @@ export default class Physics2D {
     render(context) {
         for (let i = 0; i < 36; i++) {
             for (let j = 0; j < 28; j++) {
+                if (i === 0) {
+                    context.fillStyle = '#fff';
+                    context.fillText(i, j * this._tileWidth, i * this._tileHeight);
+                }
+                
+                if (j === 0) {
+                    context.fillStyle = '#fff';
+                    context.fillText(i, j * this._tileWidth, i * this._tileHeight);
+                }
+                
                 if (this._objectsPool.hasOwnProperty(j) && this._objectsPool[j].hasOwnProperty(i)) {
                     context.strokeStyle = '#4caf50';
                     

@@ -5,6 +5,12 @@ import Frame from '../../bower_components/layer/frame/frame';
 import Physics2D from '../physics-2d';
 
 export default class Pacman extends Actor {
+    constructor() {
+        super(...arguments);
+        
+        this._nextDirection = null;
+    }
+
     static get ANIMATION_MOVE_UP() {
         return 'moveUp';
     }
@@ -22,25 +28,29 @@ export default class Pacman extends Actor {
     }
     
     set direction(direction) {
-        super.direction = direction;
+        var animation;
+
         switch (direction) {
-            case Pacman.DIRECTION_UP: {
-                this.setAnimation(Pacman.ANIMATION_MOVE_UP);
+            case Actor.DIRECTION_UP: {
+                animation = Pacman.ANIMATION_MOVE_UP;
                 break;
             }
-            case Pacman.DIRECTION_RIGHT: {
-                this.setAnimation(Pacman.ANIMATION_MOVE_RIGHT);
+            case Actor.DIRECTION_RIGHT: {
+                animation = Pacman.ANIMATION_MOVE_RIGHT;
                 break;
             }
-            case Pacman.DIRECTION_DOWN: {
-                this.setAnimation(Pacman.ANIMATION_MOVE_DOWN);
+            case Actor.DIRECTION_DOWN: {
+                animation = Pacman.ANIMATION_MOVE_DOWN;
                 break;
             }
-            case Pacman.DIRECTION_LEFT: {
-                this.setAnimation(Pacman.ANIMATION_MOVE_LEFT);
+            case Actor.DIRECTION_LEFT: {
+                animation = Pacman.ANIMATION_MOVE_LEFT;
                 break;
             }
         }
+
+        super.direction = direction;
+        this._activeAnimation = this._animations[animation];
     }
     
     _initAnimations(sprite) {
@@ -64,5 +74,34 @@ export default class Pacman extends Actor {
             new Frame(sprite, 16, 16, 251, 162),
             new Frame(sprite, 16, 16, 236, 162)
         ], 18, true);
+    }
+    
+    _setNextTargetTile() {
+        switch (this._direction) {
+            case Actor.DIRECTION_UP: {
+                if (!Physics2D.rayCast(this._tileX, this._tileY - 1)) {
+                    this._targetTileY = this._tileY - 1;
+                }
+                break;
+            }
+            case Actor.DIRECTION_RIGHT: {
+                if (!Physics2D.rayCast(this._tileX + 1, this._tileY)) {
+                    this._targetTileX = this._tileX + 1;
+                }
+                break;
+            }
+            case Actor.DIRECTION_DOWN: {
+                if (!Physics2D.rayCast(this._tileX, this._tileY + 1)) {
+                    this._targetTileY = this._tileY + 1;
+                }
+                break;
+            }
+            case Actor.DIRECTION_LEFT: {
+                if (!Physics2D.rayCast(this._tileX - 1, this._tileY)) {
+                    this._targetTileX = this._tileX - 1;
+                }
+                break;
+            }
+        }
     }
 }

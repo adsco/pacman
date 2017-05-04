@@ -12,6 +12,9 @@ export default class Actor {
         this._tileX = 0;
         this._tileY = 0;
         this._speed = 0;
+        this._speedX = 0;
+        this._speedY = 0;
+        this._maxShift = 4;
         this._speedApproximation = 0;
         this._direction = null;
         
@@ -77,25 +80,21 @@ export default class Actor {
     set direction(direction) {
         this._direction = direction;
         
-        switch (this._direction) {
+        switch (direction) {
             case Actor.DIRECTION_UP: {
-                this._targetTileX = this._tileX;
-                this._targetTileY = this._tileY - 1;
+                this._speedY = -this._speed;
                 break;
             }
             case Actor.DIRECTION_RIGHT: {
-                this._targetTileX = this._tileX + 1;
-                this._targetTileY = this._tileY;
+                this._speedX = this._speed;
                 break;
             }
             case Actor.DIRECTION_DOWN: {
-                this._targetTileX = this._tileX;
-                this._targetTileY = this._tileY + 1;
+                this._speedY = this._speed;
                 break;
             }
             case Actor.DIRECTION_LEFT: {
-                this._targetTileX = this._tileX - 1;
-                this._targetTileY = this._tileY;
+                this._speedX = -this._speed;
                 break;
             }
         }
@@ -141,48 +140,48 @@ export default class Actor {
     }
     
     update() {
-        var modifierX = this._direction === Actor.DIRECTION_LEFT ? -1 : 1;
-        var modifierY = this._direction === Actor.DIRECTION_UP ? -1 : 1;
-        
-        // Make it pixel perfectly fit to tile it lies on
-        if (this._tileX !== this._targetTileX) {
-            this._shiftX += this._speed * modifierX;
-        } else if (Math.abs(this._shiftX) - this._speed <= this._speedApproximation) {
-            this._shiftX = 0;
-        }
-        
-        // Slowly adjust to pixel perfect state
-        if (this._tileX === this._targetTileX && this._shiftX !== 0) {
-            this._shiftX -= this._shiftX > 0 ? this._speed : -this._speed;
-        }
-        
-        // Make it pixel perfectly fit to tile it lies on
-        if (this._tileY !== this._targetTileY) {
-            this._shiftY += this._speed * modifierY;
-        } else if (Math.abs(this._shiftY) - this._speed <= this._speedApproximation) {
-            this._shiftY = 0;
-        }
-        
-        // Slowly adjust to pixel perfect state
-        if (this._tileY === this._targetTileY && this._shiftY !== 0) {
-            this._shiftY -= this._shiftY > 0 ? this._speed : -this._speed;
-        }
-        
-        // Occupy next tile
-        if (Math.abs(this._shiftX) >= 8) {
-            this._tileX += modifierX;
-            this._shiftX -= modifierX * 8;
-        } else if (Math.abs(this._shiftY) >= 8) {
-            this._tileY += modifierY;
-            this._shiftY -= modifierY * 8;
-        }
-        
-        if (this._tileX === this._targetTileX && this._tileY === this._targetTileY) {
-            this._setNextTargetTile();
+        if (this._direction === Actor.DIRECTION_UP || this._direction === Actor.DIRECTION_DOWN) {
+            if (Math.round(this._shiftX) === 4) {
+                this._shiftX = 4;
+            }
+                
+            if (this._shiftX !== 4) {
+                this._shiftX += this._shiftX > 4 ? -this._speed : this._speed;
+            }
+            
+            this._shiftY += this._direction === Actor.DIRECTION_UP ? -this._speed : this._speed;
+            
+            if (this._shiftY >= 8) {
+                this._tileY++;
+                this._shiftY -= 8;
+            } else if (this._shiftY < 0) {
+                this._tileY--;
+                this._shiftY += 8;
+            }
+        } else {
+            if (Math.round(this._shiftY) === 4) {
+                this._shiftY = 4;
+            }
+            
+            if (this._shiftY !== 4) {
+                this._shiftY += this._shiftY > 4 ? -this._speed : this._speed;
+            }
+            
+            this._shiftX += this._direction === Actor.DIRECTION_LEFT ? -this._speed : this._speed;
+            
+            if (this._shiftX >= 8) {
+                this._tileX++;
+                this._shiftX -= 8;
+            } else if (this._shiftX < 0) {
+                this._tileX--;
+                this._shiftX += 8;
+            }
         }
     }
     
     render(context, time) {
+        context.fillStyle = '#fff';
+        context.fillText(`${this._shiftX.toFixed(2)} - ${this._shiftY.toFixed(2)}`, 100 , 20);
         this._activeAnimation.render(context, time, this._tileX * 8 + this._shiftX, this._tileY * 8 + this._shiftY);
     }
 }
