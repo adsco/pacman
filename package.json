@@ -29,9 +29,10 @@
     "gulp-browserify": "^0.5.1",
     "gulp-concat": "^2.6.0",
     "gulp-minify": "0.0.14",
-    "gulp-sync": "^0.1.4"
+    "gulp-sync": "^0.1.4",
+    "gulp-watch": "^4.3.10"
   },
   "browserify": {
-      "insertGlobals": true
+    "insertGlobals": true
   }
 }
